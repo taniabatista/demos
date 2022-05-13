@@ -5,13 +5,11 @@ class Robot:
         self.y = 0
 
     def get_direction(self, turn):
-        new_directions = ["N", "W", "S", "E"]  # find way to wrap around list
+        new_directions = ["N", "W", "S", "E"]*2  # simple solution
 
         index = new_directions.index(self.direction)
-        if index == 3:
-            index = 0
 
-        if turn == "L":  #  problem! CANNOT TURN LEFT 5 TIMES
+        if turn == "L":
             index += 1
 
         if turn == "R":
