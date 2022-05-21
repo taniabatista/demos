@@ -58,34 +58,21 @@ class GildedRose(object):
             if item.name == "Sulfuras":
                 continue
 
-            elif item.name == "AgedBrie":
+            item.sell_in -= 1
 
+            if item.name == "AgedBrie":
                 item.quality = (item.quality+1) if (item.quality < 50) else item.quality
+                item.quality = (item.quality+1) if (item.quality < 50 and item.sell_in < 0) else item.quality
 
             elif item.name == "BackstagePasses":
                 item.quality = (item.quality+1) if (item.quality < 50) else item.quality
-
-                if item.sell_in < 11:
-                    item.quality = (item.quality+1) if (item.quality < 50) else item.quality
-
-                if item.sell_in < 6:
-                    item.quality = (item.quality+1) if (item.quality < 50) else item.quality
+                item.quality = (item.quality+1) if (item.quality < 50 and item.sell_in < 10) else item.quality
+                item.quality = (item.quality+1) if (item.quality < 50 and item.sell_in < 5) else item.quality
+                item.quality = 0 if (item.sell_in < 0) else item.quality
 
             else:
                 item.quality = (item.quality-1) if (item.quality > 0) else item.quality
-
-            item.sell_in -= 1
-
-            if item.sell_in < 0:
-
-                if item.name == "AgedBrie":
-                    item.quality = (item.quality+1) if (item.quality < 50) else item.quality
-
-                elif item.name == "BackstagePasses":
-                    item.quality = 0
-
-                else:
-                    item.quality = (item.quality-1) if (item.quality > 0) else item.quality
+                item.quality = (item.quality-1) if (item.quality > 0 and item.sell_in < 0) else item.quality
 
 
 class Item:
@@ -168,14 +155,39 @@ class GildedRoseTest(unittest.TestCase):
         self.assertEquals(items[0].sell_in, 14)
         self.assertEquals(items[0].quality, 21)
 
+        items = [Item("BackstagePasses", 12, 20)]
+        GildedRose(items).update_quality()
+        self.assertEquals(items[0].sell_in, 11)
+        self.assertEquals(items[0].quality, 21)
+
+        items = [Item("BackstagePasses", 11, 20)]
+        GildedRose(items).update_quality()
+        self.assertEquals(items[0].sell_in, 10)
+        self.assertEquals(items[0].quality, 21)
+
         items = [Item("BackstagePasses", 10, 20)]
         GildedRose(items).update_quality()
         self.assertEquals(items[0].sell_in, 9)
         self.assertEquals(items[0].quality, 22)
 
+        items = [Item("BackstagePasses", 7, 20)]
+        GildedRose(items).update_quality()
+        self.assertEquals(items[0].sell_in, 6)
+        self.assertEquals(items[0].quality, 22)
+
+        items = [Item("BackstagePasses", 6, 20)]
+        GildedRose(items).update_quality()
+        self.assertEquals(items[0].sell_in, 5)
+        self.assertEquals(items[0].quality, 22)
+
         items = [Item("BackstagePasses", 5, 20)]
         GildedRose(items).update_quality()
         self.assertEquals(items[0].sell_in, 4)
+        self.assertEquals(items[0].quality, 23)
+
+        items = [Item("BackstagePasses", 1, 20)]
+        GildedRose(items).update_quality()
+        self.assertEquals(items[0].sell_in, 0)
         self.assertEquals(items[0].quality, 23)
 
         items = [Item("BackstagePasses", 0, 20)]
