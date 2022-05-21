@@ -70,6 +70,12 @@ class GildedRose(object):
                 item.quality = (item.quality+1) if (item.quality < 50 and item.sell_in < 5) else item.quality
                 item.quality = 0 if (item.sell_in < 0) else item.quality
 
+            elif item.name == "Conjured":
+                item.quality = (item.quality-1) if (item.quality > 0) else item.quality
+                item.quality = (item.quality-1) if (item.quality > 0) else item.quality
+                item.quality = (item.quality-1) if (item.quality > 0 and item.sell_in < 0) else item.quality
+                item.quality = (item.quality-1) if (item.quality > 0 and item.sell_in < 0) else item.quality
+
             else:
                 item.quality = (item.quality-1) if (item.quality > 0) else item.quality
                 item.quality = (item.quality-1) if (item.quality > 0 and item.sell_in < 0) else item.quality
@@ -210,20 +216,21 @@ class GildedRoseTest(unittest.TestCase):
         GildedRose(items).update_quality()
         self.assertEquals(items[0].sell_in, -5)
         self.assertEquals(items[0].quality, 20)
-    # def test_conjured(self):
-    # if sell_in > 0: quality-=2
-    # if sell_in <= 0: quality-=4
-    # items = [Item("Conjured", 10, 20)]
-    # GildedRose(items).update_quality()
-    # self.assertEquals(items[0].name, "Conjured")
-    # self.assertEquals(items[0].sell_in, 9)
-    # self.assertEquals(items[0].quality, 18)
-    #
-    # items = [Item("Conjured", 0, 20)]
-    # GildedRose(items).update_quality()
-    # self.assertEquals(items[0].name, "Conjured")
-    # self.assertEquals(items[0].sell_in, -1)
-    # self.assertEquals(items[0].quality, 16)
+
+    def test_conjured(self):
+        # if sell_in > 0: quality-=2
+        # if sell_in <= 0: quality-=4
+        items = [Item("Conjured", 10, 20)]
+        GildedRose(items).update_quality()
+        self.assertEquals(items[0].name, "Conjured")
+        self.assertEquals(items[0].sell_in, 9)
+        self.assertEquals(items[0].quality, 18)
+
+        items = [Item("Conjured", 0, 20)]
+        GildedRose(items).update_quality()
+        self.assertEquals(items[0].name, "Conjured")
+        self.assertEquals(items[0].sell_in, -1)
+        self.assertEquals(items[0].quality, 16)
 
 
 if __name__ == '__main__':
