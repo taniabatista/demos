@@ -55,12 +55,8 @@ class GildedRose(object):
     def update_quality(self):
         for item in self.items:
 
-            if item.name not in ("AgedBrie", "BackstagePasses"):
-                if item.quality > 0:
-                    if item.name != "Sulfuras":
-                        item.quality -= 1
-
             if item.name in ("AgedBrie", "BackstagePasses"):
+
                 if item.quality < 50:
                     item.quality += 1
 
@@ -72,23 +68,28 @@ class GildedRose(object):
                             if item.quality < 50:
                                 item.quality += 1
 
+            else:
+                if item.quality > 0:
+                    if item.name != "Sulfuras":
+                        item.quality -= 1
+
             if item.name != "Sulfuras":
                 item.sell_in -= 1
 
             if item.sell_in < 0:
-                if item.name != "AgedBrie":
-                    if item.name != "BackstagePasses":
-
-                        if item.quality > 0:
-                            if item.name != "Sulfuras":
-                                item.quality -= 1
-
-                    if item.name == "BackstagePasses":
-                        item.quality = item.quality - item.quality
 
                 if item.name == "AgedBrie":
                     if item.quality < 50:
                         item.quality += 1
+
+                elif item.name == "BackstagePasses":
+                    item.quality = item.quality - item.quality
+
+                else:
+
+                    if item.quality > 0:
+                        if item.name != "Sulfuras":
+                            item.quality -= 1
 
 
 class Item:
