@@ -54,6 +54,8 @@ class GildedRose(object):
 
     def update_quality(self):
         for item in self.items:
+            if item.name == "Sulfuras":
+                continue
 
             if item.name in ("AgedBrie", "BackstagePasses"):
 
@@ -70,11 +72,9 @@ class GildedRose(object):
 
             else:
                 if item.quality > 0:
-                    if item.name != "Sulfuras":
-                        item.quality -= 1
+                    item.quality -= 1
 
-            if item.name != "Sulfuras":
-                item.sell_in -= 1
+            item.sell_in -= 1
 
             if item.sell_in < 0:
 
@@ -88,8 +88,7 @@ class GildedRose(object):
                 else:
 
                     if item.quality > 0:
-                        if item.name != "Sulfuras":
-                            item.quality -= 1
+                        item.quality -= 1
 
 
 class Item:
@@ -192,10 +191,16 @@ class GildedRoseTest(unittest.TestCase):
         # quality: never changes, should always be 80
         items = [Item("Sulfuras", 10, 20)]
         GildedRose(items).update_quality()
-        self.assertEquals(items[0].name, "Sulfuras")
         self.assertEquals(items[0].sell_in, 10)
         self.assertEquals(items[0].quality, 20)
-
+        items = [Item("Sulfuras", 0, 20)]
+        GildedRose(items).update_quality()
+        self.assertEquals(items[0].sell_in, 0)
+        self.assertEquals(items[0].quality, 20)
+        items = [Item("Sulfuras", -5, 20)]
+        GildedRose(items).update_quality()
+        self.assertEquals(items[0].sell_in, -5)
+        self.assertEquals(items[0].quality, 20)
     # def test_conjured(self):
     # if sell_in > 0: quality-=2
     # if sell_in <= 0: quality-=4
