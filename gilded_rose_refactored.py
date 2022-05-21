@@ -54,41 +54,38 @@ class GildedRose(object):
 
     def update_quality(self):
         for item in self.items:
+
             if item.name == "Sulfuras":
                 continue
 
-            if item.name in ("AgedBrie", "BackstagePasses"):
+            elif item.name == "AgedBrie":
 
-                if item.quality < 50:
-                    item.quality += 1
+                item.quality = (item.quality+1) if (item.quality < 50) else item.quality
 
-                    if item.name == "BackstagePasses":
-                        if item.sell_in < 11:
-                            if item.quality < 50:
-                                item.quality += 1
-                        if item.sell_in < 6:
-                            if item.quality < 50:
-                                item.quality += 1
+            elif item.name == "BackstagePasses":
+                item.quality = (item.quality+1) if (item.quality < 50) else item.quality
+
+                if item.sell_in < 11:
+                    item.quality = (item.quality+1) if (item.quality < 50) else item.quality
+
+                if item.sell_in < 6:
+                    item.quality = (item.quality+1) if (item.quality < 50) else item.quality
 
             else:
-                if item.quality > 0:
-                    item.quality -= 1
+                item.quality = (item.quality-1) if (item.quality > 0) else item.quality
 
             item.sell_in -= 1
 
             if item.sell_in < 0:
 
                 if item.name == "AgedBrie":
-                    if item.quality < 50:
-                        item.quality += 1
+                    item.quality = (item.quality+1) if (item.quality < 50) else item.quality
 
                 elif item.name == "BackstagePasses":
-                    item.quality = item.quality - item.quality
+                    item.quality = 0
 
                 else:
-
-                    if item.quality > 0:
-                        item.quality -= 1
+                    item.quality = (item.quality-1) if (item.quality > 0) else item.quality
 
 
 class Item:
